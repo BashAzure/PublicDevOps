@@ -12,11 +12,7 @@ pool:
 jobs:
   - job: Deploy
     steps:
-        - task: AzSKARMTemplateChecker@4
-          displayName: "security"
-          inputs:
-            ARMTemplateFilePath: 'main.bicep'
-            ARMTemplateParameterFilePath: 'test.parameters.json'
+        
     
         - task: AzureResourceManagerTemplateDeployment@3
           displayName: "deploy storage"
@@ -31,3 +27,4 @@ jobs:
             csmFile: 'main.bicap'
             csmParametersFile: 'test.parameters.json'
             deploymentMode: 'Incremental'
+          
