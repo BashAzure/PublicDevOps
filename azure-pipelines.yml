@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+  - job: Deploy
+    steps:
+        - task: AzSKARMTemplateChecker@4
+          displayName: "security"
+          inputs:
+            ARMTemplateFilePath: 'main.bicep'
+            ARMTemplateParameterFilePath: 'test.parameters.json'
+    
+        - task: AzureResourceManagerTemplateDeployment@3
+          displayName: "deploy storage"
+          inputs:
+            deploymentScope: 'Resource Group'
+            azureResourceManagerConnection: 'Azure-Service Principal'
+            subscriptionId: 'e0588370-26a2-498c-bd12-9837d75c211a'
+            action: 'Create Or Update Resource Group'
+            resourceGroupName: 'AKS'
+            location: 'East US'
+            templateLocation: 'Linked artifact'
+            csmFile: 'main.bicap'
+            csmParametersFile: 'test.parameters.json'
+            deploymentMode: 'Incremental'
